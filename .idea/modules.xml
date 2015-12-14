@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/droid-vault.iml" filepath="$PROJECT_DIR$/droid-vault.iml" />
+      <module fileurl="file://$PROJECT_DIR$/droid-vault-demoapp/droid-vault-demoapp.iml" filepath="$PROJECT_DIR$/droid-vault-demoapp/droid-vault-demoapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/droid-vault-library/droid-vault-library.iml" filepath="$PROJECT_DIR$/droid-vault-library/droid-vault-library.iml" />
+    </modules>
+  </component>
+</project>
