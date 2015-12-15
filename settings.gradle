@@ -1,1 +1,1 @@
-include ':droid-vault-demoapp', ':droid-vault-library'
+include ':andvault-demoapp', ':andvault-library'
