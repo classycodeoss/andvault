@@ -22,7 +22,6 @@ import javax.security.auth.x500.X500Principal;
 
 /**
  * Helper class for protecting the Vault key using AndroidKeyStore provider.
- * <p/>
  * Wrapping here means that we protect our secret key with public/private key pair stored in the
  * platform {@link KeyStore}. This protects the symmetric vault key with asymmetric, hardware-backed
  * crypto, if provided by the device.
@@ -50,13 +49,16 @@ public class VaultKeyWrapper {
     /**
      * Create a wrapper using the public/private key pair with the given alias.
      * If no pair with that alias exists, it will be generated.
+     *
+     * @param context
+     * @param keyStoreEncryptionRequired
      */
-    public VaultKeyWrapper(Context context) throws GeneralSecurityException, IOException {
+    public VaultKeyWrapper(Context context, boolean keyStoreEncryptionRequired) throws GeneralSecurityException, IOException {
         cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         final KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
         if (!keyStore.containsAlias(KEYSTORE_KEY_ALIAS)) {
-            generateKeyPair(context);
+            generateKeyPair(context, keyStoreEncryptionRequired);
         }
         // Even if we just generated the key, always read it back to ensure we
         // can read it successfully.
@@ -92,18 +94,20 @@ public class VaultKeyWrapper {
         }
     }
 
-    private static void generateKeyPair(Context context) throws GeneralSecurityException {
+    private static void generateKeyPair(Context context, boolean keyStoreEncryptionRequired) throws GeneralSecurityException {
         final Calendar start = new GregorianCalendar();
         final Calendar end = new GregorianCalendar();
         end.add(Calendar.YEAR, 100);
-        final KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(context)
+        final KeyPairGeneratorSpec.Builder builder = new KeyPairGeneratorSpec.Builder(context)
                 .setAlias(KEYSTORE_KEY_ALIAS)
                 .setSubject(new X500Principal("CN=" + KEYSTORE_KEY_ALIAS))
                 .setSerialNumber(BigInteger.ONE)
                 .setStartDate(start.getTime())
-                .setEndDate(end.getTime())
-                .setEncryptionRequired() // TODO: derive this from vault setting
-                .build();
+                .setEndDate(end.getTime());
+        if (keyStoreEncryptionRequired) {
+            builder.setEncryptionRequired();
+        }
+        final KeyPairGeneratorSpec spec = builder.build();
         final KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", "AndroidKeyStore");
         gen.initialize(spec);
         gen.generateKeyPair();

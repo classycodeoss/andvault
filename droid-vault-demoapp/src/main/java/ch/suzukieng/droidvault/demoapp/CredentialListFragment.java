@@ -86,7 +86,7 @@ public class CredentialListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
-        if (getVault().isDeviceProtected()) {
+        if (Vault.isDeviceProtected(getContext())) {
             deviceProtectionLabel.setText(R.string.device_protection_enabled);
             deviceProtectionLabel.setBackgroundColor(getResources().getColor(R.color.positive));
         } else {
@@ -94,7 +94,7 @@ public class CredentialListFragment extends ListFragment {
             deviceProtectionLabel.setBackgroundColor(getResources().getColor(R.color.negative));
         }
 
-        if (getVault().isHardwareBackedCredentialStorage()) {
+        if (Vault.isHardwareBackedCredentialStorage()) {
             secureElementLabel.setText(R.string.secure_element_enabled);
             secureElementLabel.setBackgroundColor(getResources().getColor(R.color.positive));
         } else {
@@ -132,11 +132,7 @@ public class CredentialListFragment extends ListFragment {
             showAddCredentialDialog();
             return true;
         } else if (item.getItemId() == R.id.reset_vault_item) {
-            try {
-                getVault().reset();
-            } catch (VaultException e) {
-                ((MainActivity) getActivity()).showErrorDialog(e.getMessage());
-            }
+            Vault.reset(getContext());
             refreshCredentials();
             return true;
         } else {

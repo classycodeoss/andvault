@@ -4,10 +4,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import ch.suzukieng.droidvault.Vault;
+import ch.suzukieng.droidvault.VaultException;
 
 public class MainActivity extends AppCompatActivity implements CredentialListFragment.CredentialListFragmentListener, CredentialFragment.CredentialFragmentListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private Vault vault;
 
@@ -15,9 +19,19 @@ public class MainActivity extends AppCompatActivity implements CredentialListFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, new CredentialListFragment()).commit();
-        vault = new Vault(getApplicationContext());
+        try {
+            vault = new Vault(getApplicationContext(), Vault.isDeviceProtected(getApplicationContext()));
+        } catch (VaultException e) {
+            Log.e(TAG, "Initialization of Vault failed", e);
+            showErrorDialog(e.getMessage());
+            Vault.reset(getApplicationContext());
+            try {
+                vault = new Vault(getApplicationContext(), Vault.isDeviceProtected(getApplicationContext()));
+            } catch (VaultException e1) {
+                throw new IllegalStateException("Vault re-initialization failed", e1);
+            }
+        }
     }
 
     public Vault getVault() {
