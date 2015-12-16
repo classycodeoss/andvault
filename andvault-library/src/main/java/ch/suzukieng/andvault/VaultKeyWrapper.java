@@ -54,16 +54,17 @@ public class VaultKeyWrapper {
      * Create a wrapper using the public/private key pair with the given alias.
      * If no pair with that alias exists, it will be generated.
      *
-     * @param context
+     * @param context The application context
+     * @throws GeneralSecurityException An error occurred while creating or loading the keypair in the Android KeyStore
      */
-    public VaultKeyWrapper(Context context) throws GeneralSecurityException, IOException {
+    public VaultKeyWrapper(Context context) throws GeneralSecurityException {
         cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         final KeyStore keyStore = getAndLoadKeystore();
         if (!keyStore.containsAlias(KEYSTORE_KEY_ALIAS)) {
             generateKeyPair(context);
         }
-        // Even if we just generated the key, always read it back to ensure we
-        // can read it successfully.
+
+        // Even if we just generated the key, always read it back to ensure can read it successfully.
         final KeyStore.PrivateKeyEntry entry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(KEYSTORE_KEY_ALIAS, null);
         keyPair = new KeyPair(entry.getCertificate().getPublicKey(), entry.getPrivateKey());
     }
@@ -76,8 +77,7 @@ public class VaultKeyWrapper {
      */
     private static KeyStore getAndLoadKeystore() {
         try {
-            final KeyStore keyStore;
-            keyStore = KeyStore.getInstance("AndroidKeyStore");
+            final KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
             return keyStore;
         } catch (KeyStoreException e) {

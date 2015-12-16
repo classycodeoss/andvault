@@ -81,6 +81,11 @@ public class Vault {
         }
     }
 
+    /**
+     * @return The (symmetric) vault key. If it does not exist yet, it is created.
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
     private SecretKey getOrCreateVaultKey() throws GeneralSecurityException, IOException {
         final VaultKeyWrapper keyWrapper = new VaultKeyWrapper(context);
         final byte[] wrappedVaultKey = storage.getKey();
@@ -95,14 +100,29 @@ public class Vault {
         }
     }
 
+    /**
+     * @return The list of credentials stored in the vault.
+     */
     public List<String> getCredentialNames() {
         return storage.getCredentialNames();
     }
 
+    /**
+     * Remove the named credential from the vault.
+     *
+     * @param name The credential's name
+     */
     public void removeCredential(String name) {
         storage.removeCredential(name);
     }
 
+    /**
+     * Get the value of the named credential.
+     *
+     * @param name The credential's name (must not be null)
+     * @return The credential value, or null, if the credential does not exist in the vault
+     * @throws VaultException An error occurred while retrieving the credential from the vault
+     */
     public byte[] getCredential(String name) throws VaultException {
         final byte[] encryptedCredential = storage.getCredential(name);
         if (encryptedCredential == null) {
@@ -117,6 +137,13 @@ public class Vault {
         }
     }
 
+    /**
+     * Get the value of the named credential, which is assumed to be a string.
+     *
+     * @param name The credential's name (must not be null)
+     * @return The credential value as a string, or null, if the credential does not exist in the vault
+     * @throws VaultException An error occurred while retrieving the credential from the vault
+     */
     public String getStringCredential(String name) throws VaultException {
         byte[] value = getCredential(name);
         if (value == null) {
@@ -130,6 +157,13 @@ public class Vault {
         }
     }
 
+    /**
+     * Store a new credential, which is assumed to be a string, in the vault or overwrite an existing one.
+     *
+     * @param name  The credential's name (must not be null)
+     * @param value The credential's value (must not be null)
+     * @throws VaultException An error occurred while storing the credential
+     */
     public void storeCredential(String name, byte[] value) throws VaultException {
         try {
             storage.setCredential(name, encrypt(value));
@@ -140,6 +174,13 @@ public class Vault {
         }
     }
 
+    /**
+     * Store a new credential in the vault or overwrite an existing one.
+     *
+     * @param name  The credential's name (must not be null)
+     * @param value The credential's value (must not be null)
+     * @throws VaultException An error occurred while storing the credential
+     */
     public void storeStringCredential(String name, String value) throws VaultException {
         try {
             storeCredential(name, value.getBytes("UTF-8"));
