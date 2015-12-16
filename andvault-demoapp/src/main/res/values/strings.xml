@@ -8,6 +8,8 @@
     <string name="secure_element_enabled">Hardware-backed secure storage available</string>
     <string name="secure_element_disabled">No hardware-backed secure storage available</string>
     <string name="empty_vault">The vault is empty, no credentials have been added yet.</string>
+    <string name="error_device_not_protected">Your device is not protected - andvault is disabled, since Android KeyStore can not encrypt keys at rest.</string>
+    <string name="error_vault_initialization_failed_fmt">Initializing the Vault failed, vault reset. Cause: %s</string>
 
     <string name="menu_item_add_credential">Add</string>
     <string name="menu_item_reset_vault">Reset Vault</string>

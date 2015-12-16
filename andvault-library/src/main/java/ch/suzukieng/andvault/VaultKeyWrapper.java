@@ -36,14 +36,18 @@ public class VaultKeyWrapper {
 
     private static final String TAG = VaultKeyWrapper.class.getSimpleName();
 
-    private static final String KEYSTORE_KEY_ALIAS = "DroidVAult";
+    private static final String KEYSTORE_KEY_ALIAS = "andvault";
 
     private static final String CIPHER_AES = "AES";
 
     /**
-     * The symmetric cipher to use to
+     * The symmetric cipher to use for the key wrapping.
      */
     private final Cipher cipher;
+
+    /**
+     * A reference to the vault master keypair. The private key is never exposed.
+     */
     private final KeyPair keyPair;
 
     /**
@@ -51,14 +55,12 @@ public class VaultKeyWrapper {
      * If no pair with that alias exists, it will be generated.
      *
      * @param context
-     * @param keyStoreEncryptionRequired
      */
-    public VaultKeyWrapper(Context context, boolean keyStoreEncryptionRequired) throws GeneralSecurityException, IOException {
+    public VaultKeyWrapper(Context context) throws GeneralSecurityException, IOException {
         cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-        final KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-        keyStore.load(null);
+        final KeyStore keyStore = getAndLoadKeystore();
         if (!keyStore.containsAlias(KEYSTORE_KEY_ALIAS)) {
-            generateKeyPair(context, keyStoreEncryptionRequired);
+            generateKeyPair(context);
         }
         // Even if we just generated the key, always read it back to ensure we
         // can read it successfully.
@@ -66,35 +68,49 @@ public class VaultKeyWrapper {
         keyPair = new KeyPair(entry.getCertificate().getPublicKey(), entry.getPrivateKey());
     }
 
-
     /**
-     * Delete the vault wrapper key.
+     * Get a reference to the AndroidKeyStore. We assume this always works, as we require Android 4.3+
      *
-     * @throws VaultException Something went wrong during the deletion of the keypair.
+     * @return The Android KeyStore
+     * @throws IllegalStateException If against all odds we can not load the keystore
      */
-    public static void deleteKey() throws VaultException {
+    private static KeyStore getAndLoadKeystore() {
         try {
-            final KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+            final KeyStore keyStore;
+            keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
-            if (keyStore.containsAlias(KEYSTORE_KEY_ALIAS)) {
-                keyStore.deleteEntry(KEYSTORE_KEY_ALIAS);
-            }
+            return keyStore;
         } catch (KeyStoreException e) {
-            Log.e(TAG, "Failed to delete key with alias: " + KEYSTORE_KEY_ALIAS, e);
-            throw new VaultException("Failed to delete vault keypair in Android KeyStore", e);
+            throw new IllegalStateException("Error obtaining AndroidKeyStore", e);
         } catch (CertificateException e) {
-            Log.e(TAG, "Failed to delete key with alias: " + KEYSTORE_KEY_ALIAS, e);
-            throw new VaultException("Failed to delete vault keypair in Android KeyStore", e);
+            throw new IllegalStateException("Error obtaining AndroidKeyStore", e);
         } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "Failed to delete key with alias: " + KEYSTORE_KEY_ALIAS, e);
-            throw new VaultException("Failed to delete vault keypair in Android KeyStore", e);
+            throw new IllegalStateException("Error obtaining AndroidKeyStore", e);
         } catch (IOException e) {
-            Log.e(TAG, "Failed to delete key with alias: " + KEYSTORE_KEY_ALIAS, e);
-            throw new VaultException("Failed to delete vault keypair in Android KeyStore", e);
+            throw new IllegalStateException("Error obtaining AndroidKeyStore", e);
         }
     }
 
-    private static void generateKeyPair(Context context, boolean keyStoreEncryptionRequired) throws GeneralSecurityException {
+
+    /**
+     * Delete the vault master keypair, effectively throwing away the key to the vault.
+     */
+    public static void deleteKey() {
+        try {
+            getAndLoadKeystore().deleteEntry(KEYSTORE_KEY_ALIAS);
+        } catch (KeyStoreException e) {
+            // not sure if it's wise to ignore this, but on the other hand, there isn't that much we can do.
+            Log.w(TAG, "Failed to delete entry in AndroidKeyStore, ignoring", e);
+        }
+    }
+
+    /**
+     * Generate the vault master keypair.
+     *
+     * @param context
+     * @throws GeneralSecurityException
+     */
+    private void generateKeyPair(Context context) throws GeneralSecurityException {
         final Calendar start = new GregorianCalendar();
         final Calendar end = new GregorianCalendar();
         end.add(Calendar.YEAR, 100);
@@ -103,10 +119,8 @@ public class VaultKeyWrapper {
                 .setSubject(new X500Principal("CN=" + KEYSTORE_KEY_ALIAS))
                 .setSerialNumber(BigInteger.ONE)
                 .setStartDate(start.getTime())
-                .setEndDate(end.getTime());
-        if (keyStoreEncryptionRequired) {
-            builder.setEncryptionRequired();
-        }
+                .setEndDate(end.getTime())
+                .setEncryptionRequired();
         final KeyPairGeneratorSpec spec = builder.build();
         final KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA", "AndroidKeyStore");
         gen.initialize(spec);
@@ -114,12 +128,11 @@ public class VaultKeyWrapper {
     }
 
     /**
-     * Wrap a {@link SecretKey} using the public key assigned to this wrapper.
+     * Wrap a {@link SecretKey} using the public key of the vault master keypair.
      * Use {@link #unwrap(byte[])} to later recover the original
      * {@link SecretKey}.
      *
-     * @return a wrapped version of the given {@link SecretKey} that can be
-     * safely stored on untrusted storage.
+     * @return a wrapped version of the given {@link SecretKey} that can be safely stored on untrusted storage.
      */
     public byte[] wrap(SecretKey key) throws GeneralSecurityException {
         cipher.init(Cipher.WRAP_MODE, keyPair.getPublic());
@@ -127,11 +140,10 @@ public class VaultKeyWrapper {
     }
 
     /**
-     * Unwrap a {@link SecretKey} using the private key assigned to this
-     * wrapper.
+     * Unwrap a {@link SecretKey} using the private part of the vault master keypair. The private
+     * key remains outside of this process, the cipher is offloaded.
      *
-     * @param blob a wrapped {@link SecretKey} as previously returned by
-     *             {@link #wrap(SecretKey)}.
+     * @param blob a wrapped {@link SecretKey} as previously returned by {@link #wrap(SecretKey)}.
      */
     public SecretKey unwrap(byte[] blob) throws GeneralSecurityException {
         cipher.init(Cipher.UNWRAP_MODE, keyPair.getPrivate());

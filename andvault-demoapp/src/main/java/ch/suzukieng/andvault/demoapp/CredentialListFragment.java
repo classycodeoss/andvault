@@ -105,6 +105,8 @@ public class CredentialListFragment extends ListFragment {
         refreshCredentials();
 
         setHasOptionsMenu(true);
+        getActivity().invalidateOptionsMenu();
+
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
@@ -123,7 +125,9 @@ public class CredentialListFragment extends ListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.credential_list_menu, menu);
+        if (getVault() != null) {
+            inflater.inflate(R.menu.credential_list_menu, menu);
+        }
     }
 
     @Override
@@ -190,6 +194,11 @@ public class CredentialListFragment extends ListFragment {
     }
 
     private void refreshCredentials() {
-        setListAdapter(new CredentialListAdapter(getContext(), getVault().getCredentialNames()));
+        if (getVault() != null) {
+            setListAdapter(new CredentialListAdapter(getContext(), getVault().getCredentialNames()));
+        }
+        else {
+            setListAdapter(null);
+        }
     }
 }

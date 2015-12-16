@@ -19,22 +19,33 @@ public class MainActivity extends AppCompatActivity implements CredentialListFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, new CredentialListFragment()).commit();
-        try {
-            vault = new Vault(getApplicationContext(), Vault.isDeviceProtected(getApplicationContext()));
-        } catch (VaultException e) {
-            Log.e(TAG, "Initialization of Vault failed", e);
-            showErrorDialog(e.getMessage());
-            Vault.reset(getApplicationContext());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CredentialListFragment()).commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (Vault.isDeviceProtected(getApplicationContext())) {
             try {
-                vault = new Vault(getApplicationContext(), Vault.isDeviceProtected(getApplicationContext()));
-            } catch (VaultException e1) {
-                throw new IllegalStateException("Vault re-initialization failed", e1);
+                vault = new Vault(getApplicationContext());
+            } catch (VaultException e) {
+                Log.e(TAG, "Initialization of Vault failed", e);
+                showErrorDialog(getString(R.string.error_vault_initialization_failed_fmt, e.getMessage()));
+                Vault.reset(getApplicationContext());
+                try {
+                    vault = new Vault(getApplicationContext());
+                } catch (VaultException e1) {
+                    throw new IllegalStateException("Vault re-initialization failed", e1);
+                }
             }
+        } else {
+            showErrorDialog(getString(R.string.error_device_not_protected));
+            vault = null;
         }
     }
 
-    public Vault getVault() {
+    Vault getVault() {
         return vault;
     }
 
@@ -51,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements CredentialListFra
     }
 
     void showErrorDialog(String msg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg);
         builder.setCancelable(false);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -60,5 +71,6 @@ public class MainActivity extends AppCompatActivity implements CredentialListFra
                 dialog.dismiss();
             }
         });
+        builder.show();
     }
 }
