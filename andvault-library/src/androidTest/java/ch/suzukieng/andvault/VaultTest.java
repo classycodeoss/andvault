@@ -2,6 +2,7 @@ package ch.suzukieng.andvault;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.RequiresDevice;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.RenamingDelegatingContext;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -18,6 +19,7 @@ import java.io.UnsupportedEncodingException;
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest
+@RequiresDevice // actually, requires a lock screen. restrict to real device as we currently can't set this up on the CI server
 public class VaultTest {
 
     private Context context;
