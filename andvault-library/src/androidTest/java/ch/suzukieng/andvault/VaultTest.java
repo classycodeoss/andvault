@@ -9,6 +9,7 @@ import android.test.suitebuilder.annotation.MediumTest;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -59,5 +60,12 @@ public class VaultTest {
         vault.removeCredential("cred");
         Assert.assertNull(vault.getCredential("cred"));
         Assert.assertFalse(vault.getCredentialNames().contains("cred"));
+    }
+
+    @Test
+    @RequiresDevice
+    @Ignore
+    public void testDeviceHasHardwareEncryption() {
+        Assert.assertTrue("Device has no hardware protection", Vault.isHardwareBackedCredentialStorage());
     }
 }
