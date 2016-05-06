@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId 'com.classycode.andvault.demoapp'
         minSdkVersion 18
@@ -11,8 +11,17 @@ android {
         versionName "0.1.0" // track library version
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        play {
+            storeFile file(System.getenv('SIGNING_CONFIG_KEYSTORE_PATH') != null ? System.getenv('SIGNING_CONFIG_KEYSTORE_PATH') : 'dummy.keystore')
+            storePassword System.getenv('SIGNING_CONFIG_KEYSTORE_PASSWORD')
+            keyAlias System.getenv('SIGNING_CONFIG_KEY_ALIAS')
+            keyPassword System.getenv('SIGNING_CONFIG_KEY_PASSWORD')
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.play
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
