@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault;
+package com.classycode.andvault;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @author Alex Suzuki, Suzuki Engineering GmbH, 2015
+ * @author Alex Suzuki, Classy Code GmbH, 2015
  */
 @RunWith(AndroidJUnit4.class)
 @MediumTest

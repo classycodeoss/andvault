@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault;
+package com.classycode.andvault;
 
 import android.app.Application;
 import android.app.KeyguardManager;
@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Secure storage of application secrets, using the Android KeyStore provider.
  *
- * @author Alex Suzuki, Suzuki Engineering GmbH, 2015
+ * @author Alex Suzuki, Classy Code GmbH, 2015
  */
 public class Vault {
 

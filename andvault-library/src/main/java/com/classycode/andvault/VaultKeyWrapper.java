@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault;
+package com.classycode.andvault;
 
 import android.content.Context;
 import android.security.KeyPairGeneratorSpec;

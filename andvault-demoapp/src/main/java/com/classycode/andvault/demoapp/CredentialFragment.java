@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault.demoapp;
+package com.classycode.andvault.demoapp;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import ch.suzukieng.andvault.VaultException;
+import com.classycode.andvault.VaultException;
 
 /**
- * @author Alex Suzuki, Suzuki Engineering GmbH, 2015
+ * @author Alex Suzuki, Classy Code GmbH, 2015
  */
 public class CredentialFragment extends Fragment {
 

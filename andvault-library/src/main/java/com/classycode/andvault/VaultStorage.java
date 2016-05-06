@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault;
+package com.classycode.andvault;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * The storage does not need to have an encryption or obfuscation component, as it only stores
  * encrypted values to begin with.
  *
- * @author Alex Suzuki, Suzuki Engineering GmbH, 2015
+ * @author Alex Suzuki, Classy Code GmbH, 2015
  */
 public interface VaultStorage {
 

@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault.demoapp;
+package com.classycode.andvault.demoapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,11 +20,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ch.suzukieng.andvault.Vault;
-import ch.suzukieng.andvault.VaultException;
+import com.classycode.andvault.Vault;
+import com.classycode.andvault.VaultException;
 
 /**
- * @author Alex Suzuki, Suzuki Engineering GmbH, 2015
+ * @author Alex Suzuki, Classy Code GmbH, 2015
  */
 public class CredentialListFragment extends ListFragment {
 

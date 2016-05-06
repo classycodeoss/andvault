@@ -12,7 +12,7 @@ The idea behind the key wrapping mechanism is described [here](http://en.wikiped
 ## Try it out
 Give andvault a spin by trying out the demo app.
 
-![Demo app screenshot 1](https://github.com/suzukieng/andvault/raw/master/docs/demoapp-screenshot-1.png "Demo app screenshot 1")
+![Demo app screenshot 1](https://github.com/classycodeoss/andvault/raw/master/docs/demoapp-screenshot-1.png "Demo app screenshot 1")
 
 ## License
 Apache 2.0

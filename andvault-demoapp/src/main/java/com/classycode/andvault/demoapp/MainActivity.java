@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault.demoapp;
+package com.classycode.andvault.demoapp;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import ch.suzukieng.andvault.Vault;
-import ch.suzukieng.andvault.VaultException;
+import com.classycode.andvault.Vault;
+import com.classycode.andvault.VaultException;
 
 public class MainActivity extends AppCompatActivity implements CredentialListFragment.CredentialListFragmentListener, CredentialFragment.CredentialFragmentListener {
 

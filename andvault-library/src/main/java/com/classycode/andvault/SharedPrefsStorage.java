@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault;
+package com.classycode.andvault;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,7 +12,7 @@ import java.util.Map;
  * A {@link VaultStorage} implementation that uses {@link SharedPreferences} for storage (= file in
  * a local filesystem).
  *
- * @author Alex Suzuki, Suzuki Engineering GmbH, 2015
+ * @author Alex Suzuki, Classy Code GmbH, 2015
  */
 public class SharedPrefsStorage implements VaultStorage {
 

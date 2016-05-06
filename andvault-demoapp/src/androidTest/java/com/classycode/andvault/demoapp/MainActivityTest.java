@@ -1,4 +1,4 @@
-package ch.suzukieng.andvault.demoapp;
+package com.classycode.andvault.demoapp;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
@@ -14,11 +14,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.suzukieng.andvault.Vault;
-import ch.suzukieng.andvault.VaultException;
+import com.classycode.andvault.Vault;
+import com.classycode.andvault.VaultException;
 
 /**
- * @author Alex Suzuki, Suzuki Engineering GmbH, 2016
+ * @author Alex Suzuki, Classy Code GmbH, 2016
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest

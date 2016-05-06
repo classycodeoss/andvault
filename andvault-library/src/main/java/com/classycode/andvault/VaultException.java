@@ -1,7 +1,7 @@
-package ch.suzukieng.andvault;
+package com.classycode.andvault;
 
 /**
- * @author Alex Suzuki, Suzuki Engineering GmbH, 2015
+ * @author Alex Suzuki, Classy Code GmbH, 2015
  */
 public class VaultException extends Exception {
 
