@@ -3,8 +3,8 @@
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
 
-    <string name="device_protection_enabled">lock screen is enabled</string>
-    <string name="device_protection_disabled">lock screen is disabled</string>
+    <string name="device_protection_enabled">Device is protected</string>
+    <string name="device_protection_disabled">Device not protected</string>
     <string name="secure_element_enabled">Hardware-backed secure storage available</string>
     <string name="secure_element_disabled">No hardware-backed secure storage available</string>
     <string name="empty_vault">The vault is empty, no credentials have been added yet.</string>
