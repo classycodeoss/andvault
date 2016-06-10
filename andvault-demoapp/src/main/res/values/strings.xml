@@ -17,7 +17,7 @@
     <string name="credential_name_hint">Name</string>
     <string name="credential_value_hint">Value</string>
 
-    <string name="value_hidden">&lt;Value hidden&gt;</string>
+    <string name="value_hidden">&lt;Value hidden, tap to reveal&gt;</string>
     <string name="delete_credential">Delete credential</string>
 
 </resources>
