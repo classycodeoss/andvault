@@ -143,9 +143,10 @@ The javadoc of said class says this is an appropriate way to check if there is h
 | Samsung Galaxy Tab 4 7.0 Nook (WiFi)  | 4.4.2 |
 
 ## Try it out
-Give andvault a spin by trying out the demo app.
 
-![Demo app screenshot 1](https://github.com/classycodeoss/andvault/raw/master/docs/demoapp-screenshot-1.png "Demo app screenshot 1")
+The demo app included in this project is also available on Google Play.
+
+[![Get it on Google Play](https://raw.githubusercontent.com/classycodeoss/andvault/master/andvault-demoapp/artwork/play_badge.png)](https://play.google.com/store/apps/details?id=com.classycode.andvault.demoapp)
 
 ## License
 Apache 2.0
